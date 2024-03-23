@@ -1,0 +1,6 @@
+-sname odbc_test
+
+-setcookie odbc_test_cookie
+
++K true
++A30
