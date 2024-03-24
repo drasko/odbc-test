@@ -41,21 +41,28 @@ start_link() ->
 %     ],
 %     {ok, {SupFlags, ChildSpecs}}.
 
+% init([]) ->
+%     SupFlags = #{strategy => one_for_one, intensity => 0, period => 1},
+%     WorkerSpecs = lists:map(fun(_) ->
+%         WorkerId = make_ref(), % Generate a unique reference (PID)
+%         {worker,
+%          WorkerId,
+%          odbc_test_worker,
+%          start_link,
+%          [],
+%          permanent,
+%          0, % Max restart frequency in milliseconds
+%          worker,
+%          [odbc_test_worker]}
+%     end, lists:seq(1, 100)),
+%     {ok, {SupFlags, WorkerSpecs}}.
+
+
 init([]) ->
     SupFlags = #{strategy => one_for_one, intensity => 0, period => 1},
-    WorkerSpecs = lists:map(fun(_) ->
-        WorkerId = make_ref(), % Generate a unique reference (PID)
-        {worker,
-         WorkerId,
-         odbc_test_worker,
-         start_link,
-         [],
-         permanent,
-         0, % Max restart frequency in milliseconds
-         worker,
-         [odbc_test_worker]}
-    end, lists:seq(1, 100)),
+    WorkerSpecs = [{odbc_test_worker, {odbc_test_worker, start_link, []}, permanent, 2000, worker, [odbc_test_worker]}],
     {ok, {SupFlags, WorkerSpecs}}.
+
 
 
 %% internal functions
